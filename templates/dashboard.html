@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f3f4f6;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.dashboard-container {
+    max-width: 900px;
+    margin: 20px auto;
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    font-size: 24px;
+    color: #4caf50;
+}
+
+section {
+    margin-bottom: 20px;
+}
+
+section h2 {
+    font-size: 20px;
+    color: #555;
+    border-bottom: 2px solid #4caf50;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+table thead {
+    background-color: #4caf50;
+    color: #fff;
+}
+
+table th, table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+.view-products-btn {
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+.view-products-btn:hover {
+    background-color: #45a049;
+}
+.button {
+    
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color:  #45a049;
+}
+
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <a href="{{ url_for('logout_cust') }}" class="button" style="text-decoration: none;">Logout</a>
+        <header>
+            <h1>Welcome, {{ customer['FirstName'] }} {{ customer['LastName'] }}</h1>
+            <!-- View Products Button -->
+            <form action="{{ url_for('view_products') }}" method="GET">
+                <button type="submit" class="view-products-btn">View Products</button>
+            </form>
+        </header>
+
+        <section class="profile-section">
+            <h2>Your Profile</h2>
+            <p><strong>Email:</strong> {{ customer['Email'] }}</p>
+            <p><strong>Phone:</strong> {{ customer['PhoneNumber'] }}</p>
+            <p><strong>Address:</strong> {{ customer['Address'] }}</p>
+            <p><strong>Total Orders:</strong> {{ total_order_count }}</p>
+            <p><strong>Total Spending:</strong> {{ total_spending }}</p>
+        </section>
+
+        <section class="orders-section">
+            <h2>Recent Orders</h2>
+            {% if orders %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Order Date</th>
+                            <th>Quantity</th>
+                            <th>Total Price</th>
+                            <th>Discounted Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                            <tr>
+                                <td>{{ order['ProductName'] }}</td>
+                                <td>{{ order['OrderDate'] }}</td>
+                                <td>{{ order['Quantity'] }}</td>
+                                <td>{{ order['TotalPrice'] }}</td>
+                                <td>{{ order['DiscountedPrice'] }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>You have no recent orders.</p>
+            {% endif %}
+        </section>
+
+        <section class="cart-section">
+            <h2>Your Cart</h2>
+            {% if cart_items %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart_items %}
+                            <tr>
+                                <td>{{ item['ProductName'] }}</td>
+                                <td>{{ item['Quantity'] }}</td>
+                                <td>{{ item['Price'] }}</td>
+                                <td>{{ item['Quantity'] * item['Price'] }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <form action="{{ url_for('checkout') }}" method="POST" style="text-align: center;">
+                    <button type="submit" class="button">Checkout</button>
+                </form>
+            {% else %}
+                <p>Your cart is empty.</p>
+            {% endif %}
+        </section>
+    </div>
+</body>
+</html>

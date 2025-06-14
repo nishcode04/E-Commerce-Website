@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordered Products</title>
+    <link rel="stylesheet" href="static/view_orders.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Products Ordered by Customers</h1>
+        
+        {% if products %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Shipping Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>{{ product['ProductName'] }}</td>
+                    <td>{{ product['Quantity'] }}</td>
+                    <td>{{ product['ShippingAddress'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No products have been ordered yet.</p>
+        {% endif %}
+
+        <a href="{{ url_for('seller_dashboard') }}" class="button">Back to Dashboard</a>
+    </div>
+</body>
+</html>
