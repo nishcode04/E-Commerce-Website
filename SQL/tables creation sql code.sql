@@ -1,0 +1,77 @@
+CREATE DATABASE dbms_project;
+use dbms_project;
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY AUTO_INCREMENT,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    Email VARCHAR(100) NOT NULL UNIQUE,
+    PasswordHash VARCHAR(255) NOT NULL,
+    PhoneNumber VARCHAR(15),
+    Address TEXT,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Sellers (
+    SellerID INT PRIMARY KEY AUTO_INCREMENT,
+    CompanyName VARCHAR(100) NOT NULL,
+    ContactName VARCHAR(50),
+    Email VARCHAR(100) NOT NULL UNIQUE,
+    PhoneNumber VARCHAR(15),
+    Address TEXT,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Products (
+    ProductID INT PRIMARY KEY AUTO_INCREMENT,
+    SellerID INT,
+    ProductName VARCHAR(255) NOT NULL,
+    Description TEXT,
+    Price DECIMAL(10, 2) NOT NULL,
+    Stock INT NOT NULL,
+    CategoryName VARCHAR(100),
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (SellerID) REFERENCES Sellers(SellerID) ON DELETE SET NULL
+);
+
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY AUTO_INCREMENT,
+    CustomerID INT,
+    OrderDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    Status VARCHAR(20) NOT NULL,
+    ShippingAddress TEXT,
+    TrackingNumber VARCHAR(50),
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID) ON DELETE CASCADE
+);
+
+CREATE TABLE Payments (
+    PaymentID INT PRIMARY KEY AUTO_INCREMENT,
+    OrderID INT,
+    Amount DECIMAL(10, 2) NOT NULL,
+    PaymentMethod VARCHAR(50),
+    PaymentDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID) ON DELETE CASCADE
+);
+
+CREATE TABLE Cart (
+    CustomerID INT,
+    ProductID INT,
+    Quantity INT NOT NULL,
+    Price DECIMAL(10, 2) NOT NULL,
+    Discount DECIMAL(10, 2) DEFAULT 0,
+    AddedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    primary key (CustomerID,ProductID),
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID) ON DELETE CASCADE,
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID) ON DELETE CASCADE
+);
+
+ALTER TABLE Orders 
+ADD COLUMN ProductID INT,
+ADD COLUMN Quantity INT NOT NULL,
+ADD COLUMN Price DECIMAL(10, 2) NOT NULL,
+ADD COLUMN Discount DECIMAL(10, 2) DEFAULT 0,
+ADD FOREIGN KEY (ProductID) REFERENCES Products(ProductID) ON DELETE CASCADE;
+
+
+
+
+
