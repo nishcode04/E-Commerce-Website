@@ -22,7 +22,10 @@ BEGIN
     FROM Products
     WHERE ProductID = p_ProductID;
 	
-    select Discount into v_Discount from Cart where CustomerID = p_CustomerID; 
+    SELECT Discount INTO v_Discount
+	FROM Cart
+	WHERE CustomerID = p_CustomerID; 
+
     IF v_Stock < p_Quantity THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Insufficient stock for the selected product.';
