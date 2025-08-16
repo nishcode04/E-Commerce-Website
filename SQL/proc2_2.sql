@@ -1,4 +1,5 @@
-fix this: 	
+-- CREATE ORDER
+	
 DELIMITER $$
 CREATE PROCEDURE Place_order(
     IN p_CustomerID INT,
